@@ -20,6 +20,37 @@ For Auralis Tech, our core business focuses on the distribution of both hardware
 
 ---
 
+## Security Implementation
+
+This section outlines the protocols for ensuring data integrity and account security within the Auralis Tech infrastructure.
+
+### 1. Secure Server Implementation (HTTPS)
+To protect data in transit between the client and our Web Server, we implement the Hypertext Transfer Protocol Secure (HTTPS) using SSL/TLS encryption.
+
+#### Certificate Acquisition
+We utilize **Let's Encrypt** as our Certificate Authority (CA) due to its automated and open nature. The tool **Certbot** is employed for the retrieval and renewal of these certificates.
+
+#### Deployment Steps
+1. **Install Certbot:**
+   ```bash
+   sudo apt update
+   sudo apt install certbot python3-certbot-nginx -y
+   ```
+2. **Configure Firewall:**
+   Ensure that traffic is allowed through port 443.
+   ```bash
+   sudo ufw allow 'Nginx Full'
+   sudo ufw delete allow 'Nginx HTTP'
+   ```
+3. **Generate Certificate:**
+   ```bash
+   sudo certbot --nginx -d yourdomain.com
+   ```
+
+This configuration ensures that all traffic is automatically redirected from HTTP to HTTPS, providing an encrypted tunnel for user credentials and scraped product data.
+
+---
+
 ## Scraping Web For Items
 
 **Website we will be using for this proyect**: https://www.coolmod.com/
