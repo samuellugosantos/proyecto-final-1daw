@@ -1,8 +1,8 @@
-#Name of the shop
+# Name of the shop
 
-##Auralis Tech
+## Auralis Tech
 
-#Reasoning for options
+# Reasoning for options
 
 In this shop, we have decided to primarily sell hardware and software alike, we have found the following online stores to get our products from:
 
