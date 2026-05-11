@@ -1,5 +1,9 @@
 # Auralis Tech
 
+# Group components
+
+1. Isaac Fuentes Florez
+2. Samuel Lugo Santos
 
 ## Name of the shop
 
