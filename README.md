@@ -107,3 +107,12 @@ sudo apt update && sudo apt upgrade -y
 # Install network discovery tools
 sudo apt install net-tools -y
 ```
+## Network Infrastructure Setup
+
+Initially, VMs were using default NAT mode, causing IP conflicts. A dedicated virtual network was created to allow inter-VM communication.
+
+### Steps Taken:
+1. **Created NAT Network:** Established a global "NatNetwork" in VirtualBox settings with DHCP enabled.
+2. **Adapter Configuration:** Switched both VMs' network adapters from "NAT" to "NAT Network".
+3. **MAC Unification:** Regenerated the MAC address for the Web Server VM to ensure the DHCP server assigns a unique IP.
+4. **Verification:** Confirmed unique IP assignment via `hostname -I`.
