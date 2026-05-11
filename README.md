@@ -1,62 +1,51 @@
 # Auralis Tech
 
-# Group components
+## Group Components
+* **Isaac Fuentes Florez**
+* **Samuel Lugo Santos**
 
-1. Isaac Fuentes Florez
-2. Samuel Lugo Santos
+---
 
-## Name of the shop
+## Project Overview
+**Name of the shop:** Auralis Tech
 
-### Auralis Tech
+### Project Rationale & Sourcing
+For Auralis Tech, our core business focuses on the distribution of both hardware and software. After evaluating several industry-leading platforms, we established the following criteria for our product sourcing:
 
-## Reasoning for options
+* **PCComponentes:** Although recognized for its extensive catalog of laptops and licenses, its massive inventory was deemed beyond the current scope of this project.
 
-In this shop, we have decided to primarily sell hardware and software alike, we have found the following online stores to get our products from:
+* **CoolMod (Primary Source):** Selected as our main target for web scraping. Its interface is clean and well-structured, providing a curated selection of products that perfectly fits our e-shop's requirements.
 
-1. PCComponentes
+* **Newegg:** While a global standard for hardware, it was ultimately excluded to maintain a more manageable and focused product database.
 
-Mostly for it's vast inventory and loads of different items like laptops and software licenses, although it truly is a lot. Almost a little excessive for our proyect.
+---
 
-2. CoolMod
+## Virtual Machine Creation
 
-For us, this is the one we are gonna choose to scrape for products, it's a clean and concise website with just enough products and variation to fill an e-shop with.
+### Virtual Machine 1: Database Server (PostgreSQL)
+This section details the setup and configuration of the first node, dedicated to hosting the PostgreSQL database.
 
-3. Newegg
+#### 1. Virtual Hardware Specifications
+* **Operating System:** Linux Mint (Cinnamon/XFCE)
+* **Virtualization Platform:** VirtualBox / VMware
+* **RAM:** 12069 MB
+* **Storage:** 25 GB VDI (Dynamically allocated)
+* **Network Adapter:** NAT Network / Bridged (Subject to IP assignment)
 
-We had this one into consideration as well because it's your standard hardware shop, although we did not choose it because there is way too many items for what we had in mind.
+#### 2. Operating System Installation
+Installed using the official Linux Mint ISO:
+* **Installation Mode:** Full disk installation (Erase disk and install).
+* **System User:** admin-server
+* **Password:** 1234
+* **Privileges:** admin-server added to the sudo group.
 
-# Virtual Machine Creation
-
----------------------------
-
-## Virtual Machine 1: Database Server (PostgreSQL)
-
-This document details the setup and configuration of the first node in our infrastructure, dedicated to hosting the PostgreSQL database.
-
-### 1. Virtual Hardware Specifications
-*   **Operating System:** Linux Mint (Cinnamon/XFCE)
-*   **Virtualization Platform:** VirtualBox / VMware
-*   **RAM:** 12069 MB 
-*   **Storage:** 25 GB VDI (Dynamically allocated)
-*   **Network Adapter:** NAT Network / Bridged (to be confirmed by IP assignment)
-
-### 2. Operating System Installation
-The installation was performed using the official Linux Mint ISO.
-*   **Installation Mode:** Full disk installation (Erase disk and install).
-*   **System User:**
-    *   **Username:** `admin-server`
-    *   **Password:** `1234`
-*   **Privileges:** The user `admin-server` has been added to the `sudo` group for administrative tasks.
-
-### 3. Initial System Preparation
-Once the OS was installed, the system was updated and basic networking tools were added:
+#### 3. Initial System Preparation
 ```bash
 sudo apt update && sudo apt upgrade -y
 sudo apt install net-tools -y
 ```
 
-### 4. Database Engine Installation (PostgreSQL)
-We installed the PostgreSQL server and its additional utilities:
+#### 4. Database Engine Installation (PostgreSQL)
 ```bash
 # Install PostgreSQL
 sudo apt install postgresql postgresql-contrib -y
@@ -65,32 +54,32 @@ sudo apt install postgresql postgresql-contrib -y
 sudo systemctl status postgresql
 ```
 
-### 5. Current Progress
+#### 5. Current Progress
 - [x] VM Created with specified hardware.
 - [x] Linux Mint OS installed successfully.
-- [x] User `admin-server` configured.
+- [x] User admin-server configured.
 - [x] PostgreSQL service is active and running.
 
-## Virtual Machine 2: Web Server
+---
 
-### 1. Virtual Hardware Specifications
-*   **Operating System:** Linux Mint (Cinnamon/XFCE)
-*   **Virtualization Platform:** VirtualBox / VMware
-*   **RAM:** 13306 MB 
-*   **Storage:** 25 GB VDI (Dynamically allocated)
-*   **Network Adapter:** NAT Network (Must match the Database VM for connectivity)
+### Virtual Machine 2: Web Server
 
-### 2. Operating System Installation
-The installation followed the same procedure as the first node to ensure environment consistency.
-*   **Installation Mode:** Full disk installation.
-*   **System User:**
-    *   **Username:** `admin-server`
-    *   **Password:** `1234`
-*   **Hostname:** `web-server` (or as assigned during setup)
-*   **Privileges:** The user `admin-server` has full `sudo` access.
+#### 1. Virtual Hardware Specifications
+* **Operating System:** Linux Mint (Cinnamon/XFCE)
+* **Virtualization Platform:** VirtualBox / VMware
+* **RAM:** 13306 MB
+* **Storage:** 25 GB VDI (Dynamically allocated)
+* **Network Adapter:** NAT Network (Matches Database VM for connectivity)
 
-### 3. Initial System Preparation
-After the first boot, the system repositories were updated to the latest versions:
+#### 2. Operating System Installation
+Consistency maintained with the first node:
+* **Installation Mode:** Full disk installation.
+* **System User:** admin-server
+* **Password:** 1234
+* **Hostname:** web-server
+* **Privileges:** Full sudo access.
+
+#### 3. Initial System Preparation
 ```bash
 # Update and upgrade system packages
 sudo apt update && sudo apt upgrade -y
@@ -98,9 +87,3 @@ sudo apt update && sudo apt upgrade -y
 # Install network discovery tools
 sudo apt install net-tools -y
 ```
-
-### 4. Current Progress
-- [x] VM Created with matching network configuration.
-- [x] Linux Mint OS installed and functional.
-- [x] User `admin-server` configured with administrative rights.
-- [x] System environment updated and ready for Web Server (Apache/Nginx) installation.
