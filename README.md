@@ -128,4 +128,4 @@ The "Destination Host Unreachable" issue was resolved by ensuring both virtual m
 * **Environment:** Ready for secure service deployment (HTTPS and PostgreSQL remote access).
 
 ## Project Architecture
-(images/Estructura_del_host.png)
+![Estructura del Host](images/Estructura_del_host.png)
