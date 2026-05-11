@@ -126,3 +126,6 @@ The "Destination Host Unreachable" issue was resolved by ensuring both virtual m
 * **Source VM (Web):** Successfully reached the Database VM.
 * **Network Status:** 0% packet loss.
 * **Environment:** Ready for secure service deployment (HTTPS and PostgreSQL remote access).
+
+## Project Architecture
+(images/Estructura_del_host.png)
