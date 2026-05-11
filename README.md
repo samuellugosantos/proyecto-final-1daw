@@ -116,3 +116,13 @@ Initially, VMs were using default NAT mode, causing IP conflicts. A dedicated vi
 2. **Adapter Configuration:** Switched both VMs' network adapters from "NAT" to "NAT Network".
 3. **MAC Unification:** Regenerated the MAC address for the Web Server VM to ensure the DHCP server assigns a unique IP.
 4. **Verification:** Confirmed unique IP assignment via `hostname -I`.
+
+
+## Connectivity Confirmed
+
+The "Destination Host Unreachable" issue was resolved by ensuring both virtual machines were correctly bridged to the same NAT Network.
+
+### Final Verification:
+* **Source VM (Web):** Successfully reached the Database VM.
+* **Network Status:** 0% packet loss.
+* **Environment:** Ready for secure service deployment (HTTPS and PostgreSQL remote access).
