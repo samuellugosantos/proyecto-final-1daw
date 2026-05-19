@@ -499,7 +499,50 @@ host    all             all             10.109.99.11/32         md5
 
 
 
+## Unified Database Schema Blueprint (DDL Script)
 
+The following production script compiles the entire storage infrastructure for **Auralis Tech**, integrating Role-Based Access Control (`rol`) within a clean, multi-user identity model.
+
+```sql
+-- Drop structures if legacy models exist
+DROP TABLE IF EXISTS usuarios CASCADE;
+DROP TABLE IF EXISTS productos_software CASCADE;
+DROP TABLE IF EXISTS productos_hardware CASCADE;
+
+-- Identity & Access Management Table
+CREATE TABLE usuarios (
+id SERIAL PRIMARY KEY,
+nombre VARCHAR(100) NOT NULL,
+email VARCHAR(150) UNIQUE NOT NULL,
+contrasenia_hash VARCHAR(255) NOT NULL,
+rol VARCHAR(30) NOT NULL DEFAULT 'usuario'
+);
+
+-- Software Catalog Architecture Table
+CREATE TABLE productos_software (
+id SERIAL PRIMARY KEY,
+nombre VARCHAR(150) NOT NULL,
+descripcion TEXT,
+precio NUMERIC(10, 2) NOT NULL DEFAULT 0.00,
+url_imagen VARCHAR(255),
+fuente VARCHAR(255)
+);
+
+-- Hardware Catalog Architecture Table
+CREATE TABLE productos_hardware (
+id SERIAL PRIMARY KEY,
+nombre VARCHAR(150) NOT NULL,
+descripcion TEXT,
+precio NUMERIC(10, 2) NOT NULL DEFAULT 0.00,
+url_imagen VARCHAR(255),
+fuente VARCHAR(255)
+);
+```
+
+### Script Execution Execution Status
+* **Platform:** pgAdmin4 SQL Query Editor Dashboard [INDEX: 1.1.5].
+* **Integrity Constraints:** Primary keys (`PK`) and unique indicators (`UK`) are natively validated.
+* **Seed Data:** Initial mock parameters were successfully appended to verify dynamic schema reads.
 
 
 ## Link to repository
