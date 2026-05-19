@@ -503,38 +503,47 @@ host    all             all             10.109.99.11/32         md5
 
 The following production script compiles the entire storage infrastructure for **Auralis Tech**, integrating Role-Based Access Control (`rol`) within a clean, multi-user identity model.
 
+
+
+## Optimized Relational Model & Unified Catalog Architecture
+
+The database architecture for **Auralis Tech** has been refactored into a standardized N:M (Many-to-Many) transaction paradigm to allow users to generate orders containing multiple software licenses or hardware components.
+
+### Architectural Improvements:
+1. **Catalog Polymorphism:** Consolidated legacy `productos_hardware` and `productos_software` into a unified `productos` table. An explicit `categoria` column controls business logic segmentation.
+2. **Transactional Normalization:** Introduced the associative table `pedido`. It maps historical logs using compound primary keys, ensuring strict relational reference constraints.
+
+### 1. Data Definition Language (DDL) Deployment Script
 ```sql
-
-
--- Identity & Access Management Table
 CREATE TABLE usuarios (
-id SERIAL PRIMARY KEY,
-nombre VARCHAR(100) NOT NULL,
-email VARCHAR(150) UNIQUE NOT NULL,
-contrasenia_hash VARCHAR(255) NOT NULL,
-rol VARCHAR(30) NOT NULL DEFAULT 'usuario'
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    contrasena VARCHAR(255) NOT NULL,
+    rol VARCHAR(30) NOT NULL DEFAULT 'usuario'
 );
 
--- Software Catalog Architecture Table
-CREATE TABLE productos_software (
-id SERIAL PRIMARY KEY,
-nombre VARCHAR(150) NOT NULL,
-descripcion TEXT,
-precio NUMERIC(10, 2) NOT NULL DEFAULT 0.00,
-url_imagen VARCHAR(255),
-fuente VARCHAR(255)
+CREATE TABLE productos (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL,
+    descripcion TEXT,
+    precio NUMERIC(10, 2) NOT NULL DEFAULT 0.00,
+    url_imagen VARCHAR(255),
+    fuente VARCHAR(255),
+    categoria VARCHAR(50) NOT NULL
 );
 
--- Hardware Catalog Architecture Table
-CREATE TABLE productos_hardware (
-id SERIAL PRIMARY KEY,
-nombre VARCHAR(150) NOT NULL,
-descripcion TEXT,
-precio NUMERIC(10, 2) NOT NULL DEFAULT 0.00,
-url_imagen VARCHAR(255),
-fuente VARCHAR(255)
+CREATE TABLE pedido (
+    id_usuario INT REFERENCES usuarios(id) ON DELETE CASCADE,
+    id_productos INT REFERENCES productos(id) ON DELETE CASCADE,
+    fecha_compra TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    total NUMERIC(10, 2) NOT NULL DEFAULT 0.00,
+    PRIMARY KEY (id_usuario, id_productos)
 );
 ```
+### Relational Model
+![](images/DISEÑO_BASE.png)
+
 
 ### Script Execution Execution Status
 * **Platform:** pgAdmin4 SQL Query Editor Dashboard [INDEX: 1.1.5].
