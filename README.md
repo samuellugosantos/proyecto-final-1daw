@@ -504,10 +504,7 @@ host    all             all             10.109.99.11/32         md5
 The following production script compiles the entire storage infrastructure for **Auralis Tech**, integrating Role-Based Access Control (`rol`) within a clean, multi-user identity model.
 
 ```sql
--- Drop structures if legacy models exist
-DROP TABLE IF EXISTS usuarios CASCADE;
-DROP TABLE IF EXISTS productos_software CASCADE;
-DROP TABLE IF EXISTS productos_hardware CASCADE;
+
 
 -- Identity & Access Management Table
 CREATE TABLE usuarios (
