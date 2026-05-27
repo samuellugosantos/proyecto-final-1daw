@@ -1,4 +1,4 @@
-### Módulo 4 ### Web Generation Subsystem (Web Builder)
+### Web Generation Subsystem (Web Builder)
 
 This section details the architecture, the design and the deployment of the software from the system dedicated to read the database to compile statically the visible catalog from the e-shop.
 
