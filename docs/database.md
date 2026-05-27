@@ -6,7 +6,7 @@ Before compiling the production database container, a secondary administrative r
 The new administrator account was provisioned securely via the cluster console on the **VM-BBDD** architecture using the following structure:
 ```sql
 -- Access granted with full administrative rights (Superuser & DB Creation capabilities)
-CREATE USER samu_admin WITH PASSWORD 'YourSecurePasswordHere';
+CREATE USER samu_admin WITH PASSWORD '1234';
 ALTER ROLE samu_admin WITH SUPERUSER CREATEDB;
 ```
 

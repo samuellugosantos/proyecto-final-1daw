@@ -1,33 +1,31 @@
 ### Módulo 4 ### Web Generation Subsystem (Web Builder)
 
-Esta sección detalla la arquitectura, el diseño y el despliegue del componente de software del sistema dedicado a realizar la lectura de la base de datos relacional y compilar estáticamente el catálogo web visible de la e-shop (Requerimiento Funcional RF-005).
+This section details the architecture, the design and the deployment of the software from the system dedicated to read the database to compile statically the visible catalog from the e-shop.
 
-1. Visión General del Módulo Web Builder
-El propósito de la aplicación Web Builder es establecer la capa de presentación del proyecto. Su función principal es leer los datos persistidos de los productos (hardware y software) en el motor PostgreSQL y generar un archivo estático index.html que será servido por el servidor web Nginx configurado en la VM Web-Server-Catalago.
+1. General vision of the Modular Web Builder
+The purpose of the Web Builder is to establush a layer of preservation on this proyect. It's main purpose is to read the data on each product (Hardware) on the PostgreSQL engine to generate an index.html file that will be given by Nginx's server that's configured in the Virtual Machine for the Web-Server
 
 
-
-| Componente | Función | IP / Ruta de Conexión |
+| Component | Function | IP |
 | :--- | :--- | :--- |
-| **Aplicación** | `web_builder_app.py` | Ejecutada en VM Web-Server-Catalago (IP: 10.109.99.11) |
-| **Origen de Datos** | Base de Datos `Auralis_Tech` (Tabla productos) | VM MINT-BBDD-CATALAGO (IP: 10.109.99.115, Puerto 5432) |
-| **Destino** | Catálogo HTML estático | `/var/www/html/index.html` (Nginx Root) |
+| **Aplication** | `web_builder_app.py` | Executed in the Web-Server Virtual Machine (IP: 10.109.99.11) |
+| **Data Origin** | Database `Auralis_Tech` (producto table) | VM MINT-BBDD-CATALAGO (IP: 10.109.99.115, Puerto 5432) |
+| **End-point** | Static HTML Catalog | `/var/www/html/index.html` (Nginx Root) |
 
-2. Configuración del Entorno Virtual y Dependencias
-Para mantener una estructura de proyecto profesional y limpia, se utiliza un entorno virtual de Python (venv) que aísla las dependencias requeridas (principalmente `psycopg2-binary`). Todos los comandos se ejecutan en la VM Web-Server-Catalago (Linux Mint).
+2. Configuration and dependencies of the Virtual Enviroment
+To maintain a robust structure of cleanliness, we use a Virtual Python Enviroment which will deal and fix the required dependencies, mostly `psycopg2-binary`. Every command was executed on the Web-Server Virtual Machine
 
-2.1. Estructura de Carpetas
-Se asegura la separación lógica de responsabilidades creando la estructura necesaria para el Web Builder:
+2.1. Folder Structure
+We will create a structure with the sole purpose to separate the logical responsability of the Web Builder:
 
 ```bash
-# Navegar a la carpeta raíz del proyecto y crear la estructura
 cd ~/proyecto-auralis/
 mkdir -p web_builder
 cd web_builder
 ```
 
-2.2. Entorno Virtual (venv)
-Se crea y activa el entorno virtual para instalar `psycopg2-binary` de manera aislada.
+2.2. Virtual Enviroment (venv)
+We create and activate this Virtual Enviroment to install the PostgreSQL library properly.
 
 ```bash
 # Crear el Entorno Virtual
@@ -43,11 +41,9 @@ echo "psycopg2-binary" > requirements.txt
 pip install -r requirements.txt
 ```
 
-3. Código de la Aplicación (web_builder_app.py)
-Esta aplicación contiene la lógica de conexión al clúster PostgreSQL, la consulta SELECT sobre la tabla productos, y la generación de una cuadrícula de productos con HTML semántico y CSS básico.
+3. The body of the Application(web_builder_app.py)
+This application contains all the connections to the PostgreSQL, the SELECT over the producto table and the generation of the products with the usage of basic HTML and CSS.
 
-3.1. Listado de Código
-Crea el archivo `web_builder_app.py` y pega el siguiente código. Advertencia: Asegúrate de reemplazar `'TU_CONTRASENA_SEGURA'` con la contraseña del usuario administrador que corresponda (ej. `isaac_admin`).
 
 ```python
 import psycopg2
@@ -58,7 +54,7 @@ DB_CONFIG = {
     'host': '10.109.99.115',
     'database': 'Auralis_Tech',
     'user': 'isaac_admin', 
-    'password': 'TU_CONTRASENA_SEGURA',
+    'password': '1234',
     'port': '5432'
 }
 
@@ -172,10 +168,11 @@ if __name__ == "__main__":
     main()
 ```
 
-4. Ejecución del Despliegue y Verificación
+4. Execution and Verification
 
-4.1. Ejecución Reproducible
-Para que la aplicación Python pueda escribir el archivo `index.html` en el directorio de Nginx (`/var/www/html/`), que generalmente pertenece a `root` y `www-data`, el script debe ejecutarse con privilegios de superusuario (`sudo`) garantizando que invoque de forma directa las dependencias del entorno virtual aislado.
+4.1. Execution manual
+To allow python to write on the `index.html` file in the Nginx directory (`/var/www/html/`), we will use `sudo` command to clear all the dependencies of the Enviroment.
+
 
 ```bash
 # Navegar al directorio e iniciar ejecución del componente
@@ -183,21 +180,20 @@ cd ~/proyecto-auralis/web_builder
 sudo ../entorno_web/bin/python3 web_builder_app.py
 ```
 
-**Resultado Esperado en Consola:**
+**Expected result:**
 ```text
 --- Auralis Tech Web Builder App Iniciada ---
-Productos recuperados de la BBDD: [Número de productos]
-Éxito: Catálogo HTML generado y escrito en /var/www/html/index.html
-Proceso completado. El catálogo está listo para ser servido por Nginx.
+Database items: [Amount]
+Passed: HTML catalog written in /var/www/html/
+Completed process. Nginex is waiting
 ```
 
-4.2. Verificación del Despliegue
+4.2. Verification of Deactivation
 
 ```bash
-# Desactivar el Entorno Virtual (opcional, al finalizar el despliegue local)
 deactivate
 ```
 
-* **Verificación del Contenido Servido por Nginx**: Acceda a un navegador web externo e introduzca la dirección del servidor web para validar que el contenido mapeado desde la base de datos se despliega de forma íntegra bajo la conexión SSL segura (HTTPS), tal como se estableció en el requisito de seguridad **RF-006**.
-* **URL de Acceso**: `https://10.109.99.11`
+* **Verification of Content in Nginex**: Access your web browser and input the IP address of the web server to validate the contents from the database. 
+* **Access URL**: `https://10.109.99.11`
 
