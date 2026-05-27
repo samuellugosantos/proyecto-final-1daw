@@ -1,39 +1,39 @@
 import psycopg2
 import os
 import sys
+from typing import List, Tuple
 
 # --- CONFIGURACIÓN DE LA BASE DE DATOS (DB Layer) ---
 
-# Conexión al servidor PostgreSQL de la VM-BBDD
+# Configuración de la conexión remota a la VM MINT-BBDD-CATALAGO (10.109.99.115)
 DB_CONFIG = {
-    'host': '10.109.99.115',
-    'database': 'Auralis_Tech',
-    'user': 'isaac_admin',
-    'password': 'Isaac0905', 
+    'host': '10.109.99.115',  # IP del servidor PostgreSQL
+    'database': 'Auralis_Tech', # Nombre de la base de datos de producción
+    'user': 'samu_admin', # Usuario administrador provisto
+    'password': '1234', 
     'port': '5432'
 }
 
-# Ruta donde Nginx espera encontrar el archivo HTML
+# Ruta donde Nginx sirve el archivo HTML
 NGINX_WEB_ROOT = '/var/www/html/index.html'
 
-def fetch_products():
+
+def fetch_products() -> Optional[List[Tuple]]:
     """
     Se conecta a la BBDD, consulta todos los productos y devuelve la lista.
+    Los campos recuperados coinciden con el schema de la tabla productos.
     """
     conn = None
     products = []
     try:
-        # Intentar establecer la conexión
         conn = psycopg2.connect(**DB_CONFIG)
         cur = conn.cursor()
 
-        # Consulta para obtener todos los campos requeridos de la tabla productos
+        # Selecciona todos los campos necesarios para el renderizado del catálogo
         query = "SELECT nombre, descripcion, precio, url_imagen, categoria, fuente FROM productos ORDER BY categoria, nombre;"
         cur.execute(query)
         
-        # Obtener los resultados
         products = cur.fetchall()
-
         cur.close()
     except (Exception, psycopg2.Error) as error:
         print(f"Error al conectar o consultar la BBDD: {error}", file=sys.stderr)
@@ -44,18 +44,19 @@ def fetch_products():
     
     return products
 
-def generate_html(products):
+
+def generate_html(products: List[Tuple]) -> str:
     """
-    Genera el contenido HTML de la página web a partir de los datos de los productos.
-    (HTML semántico y limpio, como exige la rúbrica)
+    Genera el contenido HTML de la página web (RF-005).
+    Se utiliza HTML semántico y un diseño limpio.
     """
     if not products:
-        # Mensaje si no hay datos scrapeados aún
+        # Mensaje si la tabla está vacía
         return """
         <!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Auralis Tech - Catálogo</title>
         <style>body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }</style>
         </head><body><h1>Auralis Tech Catálogo</h1>
-        <p>Aún no hay productos disponibles. Ejecute la aplicación de scraping.</p></body></html>
+        <p>Aún no hay productos disponibles. Ejecute la aplicación de scraping primero.</p></body></html>
         """
 
     # --- Estructura HTML y CSS Básico para el Catálogo ---
@@ -91,9 +92,15 @@ def generate_html(products):
             <div class="product-grid">
     """
     
-    # Procesar y añadir cada producto
-    for nombre, descripcion, precio, url_imagen, categoria, fuente in products:
-        descripcion = descripcion if descripcion else "Sin descripción disponible."
+    # Mapeo de índices de la tupla: 0:nombre, 1:descripcion, 2:precio, 3:url_imagen, 4:fuente, 5:categoria
+    for product in products:
+        nombre = product[0]
+        descripcion = product[1] if product[1] else "Sin descripción disponible."
+        # Formato de precio a dos decimales
+        precio = product[2] if product[2] is not None else 0.00 
+        url_imagen = product[3] if product[3] else 'http://placeholder.com/image.jpg'
+        fuente = product[4]
+        categoria = product[5]
         
         product_html = f"""
                 <div class="product-card">
@@ -119,21 +126,23 @@ def generate_html(products):
     """
     return html_content
 
-def write_html_to_nginx(html_content):
+
+def write_html_to_nginx(html_content: str) -> bool:
     """
     Escribe el contenido HTML generado en el directorio raíz de Nginx.
-    Requiere permisos de escritura en /var/www/html/ (usualmente con sudo).
     """
     try:
-        # Se necesita `sudo` si el usuario no tiene permisos de escritura en /var/www/html/
+        # Esto requiere permisos de escritura en /var/www/html/, por lo que debe
+        # ejecutarse con 'sudo' fuera de este script.
         with open(NGINX_WEB_ROOT, 'w') as f:
             f.write(html_content)
         
         print(f"Éxito: Catálogo HTML generado y escrito en {NGINX_WEB_ROOT}")
         return True
     except IOError as e:
-        print(f"ERROR: No se pudo escribir el archivo en {NGINX_WEB_ROOT}. Ejecute el script con 'sudo' o ajuste los permisos de la carpeta /var/www/html/. Error: {e}", file=sys.stderr)
+        print(f"ERROR: No se pudo escribir el archivo en {NGINX_WEB_ROOT}. Ejecute el script con 'sudo'. Error: {e}", file=sys.stderr)
         return False
+
 
 def main():
     print("--- Auralis Tech Web Builder App Iniciada ---")
@@ -141,7 +150,7 @@ def main():
     products = fetch_products()
     
     if products is None:
-        print("Fallo en la obtención de datos. Abortando generación HTML.")
+        print("Fallo en la obtención de datos desde la BBDD. Abortando generación HTML.")
         sys.exit(1)
 
     print(f"Productos recuperados de la BBDD: {len(products)}")
