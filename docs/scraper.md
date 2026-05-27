@@ -6,18 +6,6 @@ This document describes the design, implementation, and deployment steps of the 
 The data extraction module operates as an independent Extract-Transform-Load (ETL) pipeline. It communicates with the live vendor target page and registers clean relational datasets inside a remote PostgreSQL database engine cluster.
 
 
-┌────────────────────────────────────────────────────────┐
-│ SCRAPER APPLICATION │
-└───────────────────────────┬────────────────────────────┘
-│
-┌───────────────┴───────────────┐
-▼ ▼
-┌──────────────┐ ┌──────────────┐
-│ Requests │ │BeautifulSoup4│
-│(HTTP Engine) │ │ (DOM Parser) │
-└──────────────┘ └──────────────┘
-
-
 ### Module Responsibilities
 * **Network Acquisition**: Employs Python Requests to dispatch targeted HTTP requests. It utilizes simulated browser metadata headers to guarantee platform access.
 * **Structural Parsing**: Utilizes BeautifulSoup4 to examine raw HTML layouts and extract data fields via CSS selectors.
