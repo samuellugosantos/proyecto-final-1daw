@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+*.log
+productos.json
+"database utils.py"
+web_builder/output/
