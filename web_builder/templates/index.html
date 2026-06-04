@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auralis Tech — Hardware & Software Catalogue</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- ── Header ── -->
+    <header class="site-header">
+        <h1 class="logo">🖥 Auralis Tech</h1>
+        <p class="tagline">HARDWARE & SOFTWARE CATALOGUE</p>
+    </header>
+
+    <!-- ── Filter nav ── -->
+    <nav class="filter-nav">
+        <div class="filter-nav-inner">
+            <a class="filter-btn" href="index.html">All</a>
+            <a class="filter-btn" href="teclados.html">Keyboards</a>
+            <a class="filter-btn" href="ratones.html">Mouse</a>
+            <a class="filter-btn" href="monitores.html">Monitors</a>
+            <a class="filter-btn" href="software.html">Software</a>
+        </div>
+    </nav>
+
+    <!-- ── Results count ── -->
+    <div class="results-bar">
+        <span id="product-count"></span>
+    </div>
+
+    <!-- ── Grid ── -->
+    <main class="productos" id="product-grid">
+        {{ productos_html }}
+    </main>
+
+    <!-- ── Footer ── -->
+    <footer class="site-footer">
+        <p>Auralis Tech · Products sourced from <a href="https://www.coolmod.com" target="_blank">CoolMod</a> · Prices may vary</p>
+        <p class="footer-sub">1DAW · 2025–2026</p>
+    </footer>
+
+    <script>
+        // Count visible products
+        const counter = document.getElementById('product-count');
+        const cards   = document.querySelectorAll('.card');
+        counter.textContent = cards.length + ' product' + (cards.length !== 1 ? 's' : '');
+
+        // Mark active link
+        const current = window.location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            if (btn.getAttribute('href') === current) {
+                btn.classList.add('active');
+            }
+        });
+    </script>
+
+</body>
+</html>
